@@ -20,25 +20,6 @@ import {
   disconnectSocket,
 } from '../services/socketService';
 
-// Inject CSS in web environment to hide any floating dev menu / gear overlays
-if (Platform.OS === 'web' && typeof document !== 'undefined') {
-  try {
-    const style = document.createElement('style');
-    style.innerHTML = `
-      [class*="dev-menu"], [id*="dev-menu"], [class*="DevTools"], [id*="react-devtools"],
-      button[title*="Settings"], div[title*="Settings"], .expo-dev-menu-trigger {
-        display: none !important;
-        visibility: hidden !important;
-        opacity: 0 !important;
-        pointer-events: none !important;
-      }
-    `;
-    document.head.appendChild(style);
-  } catch (e) {
-    // Ignore web DOM injection errors on non-browser environments
-  }
-}
-
 const ChatScreen = ({ username, onLeave }) => {
   const [messages, setMessages] = useState([]);
   const [onlineUsers, setOnlineUsers] = useState([]);
@@ -179,7 +160,8 @@ const ChatScreen = ({ username, onLeave }) => {
     <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
       <KeyboardAvoidingView
         style={styles.keyboardAvoidingView}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={0}
       >
         <Header
           username={username}
@@ -194,7 +176,7 @@ const ChatScreen = ({ username, onLeave }) => {
           onDismiss={() => setAlertMessage('')}
         />
 
-        <View style={styles.mainChatContent}>
+        <View style={styles.messagesContainer}>
           {loading ? (
             <View style={styles.loadingContainer}>
               <ActivityIndicator size="small" color="#6366f1" />
@@ -203,6 +185,7 @@ const ChatScreen = ({ username, onLeave }) => {
           ) : (
             <FlatList
               ref={flatListRef}
+              style={styles.flatList}
               data={messages}
               keyExtractor={(item, index) => item._id || index.toString()}
               renderItem={({ item, index }) => {
@@ -216,8 +199,8 @@ const ChatScreen = ({ username, onLeave }) => {
                   />
                 );
               }}
-              contentContainerStyle={styles.listContent}
               keyboardShouldPersistTaps="handled"
+              contentContainerStyle={styles.listContent}
               onContentSizeChange={() => scrollToBottom(true)}
               onLayout={() => scrollToBottom(false)}
               ListEmptyComponent={
@@ -248,9 +231,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#090d16',
   },
-  mainChatContent: {
+  messagesContainer: {
     flex: 1,
     backgroundColor: '#090d16',
+  },
+  flatList: {
+    flex: 1,
   },
   loadingContainer: {
     flex: 1,
@@ -264,8 +250,9 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
   listContent: {
-    paddingVertical: 12,
-    paddingBottom: 8,
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    paddingBottom: 12,
     flexGrow: 1,
   },
   emptyContainer: {

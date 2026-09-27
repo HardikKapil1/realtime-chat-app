@@ -45,8 +45,8 @@ const MessageInput = ({ username }) => {
   const isSendDisabled = !text.trim();
 
   return (
-    <View style={styles.composerWrapper}>
-      <View style={styles.inputContainer}>
+    <View style={styles.composerContainer}>
+      <View style={styles.inputRow}>
         <TextInput
           style={styles.input}
           placeholder="Type a message..."
@@ -67,14 +67,7 @@ const MessageInput = ({ username }) => {
           disabled={isSendDisabled}
           activeOpacity={0.8}
         >
-          <Text
-            style={[
-              styles.sendIcon,
-              isSendDisabled ? styles.sendIconDisabled : styles.sendIconActive,
-            ]}
-          >
-            ➤
-          </Text>
+          <Text style={styles.sendButtonText}>Send</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -82,22 +75,23 @@ const MessageInput = ({ username }) => {
 };
 
 const styles = StyleSheet.create({
-  composerWrapper: {
+  composerContainer: {
     backgroundColor: '#0f172a',
-    paddingHorizontal: 14,
+    paddingHorizontal: 16,
     paddingVertical: 10,
     borderTopWidth: 1,
     borderTopColor: '#1e293b',
+    minHeight: 56,
   },
-  inputContainer: {
+  inputRow: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#1e293b',
-    borderRadius: 26,
+    borderRadius: 24,
     paddingLeft: 16,
     paddingRight: 6,
     paddingVertical: Platform.OS === 'ios' ? 6 : 4,
-    minHeight: 52,
+    minHeight: 48,
     borderWidth: 1,
     borderColor: '#334155',
   },
@@ -108,8 +102,8 @@ const styles = StyleSheet.create({
     paddingVertical: Platform.OS === 'ios' ? 8 : 6,
   },
   sendButton: {
-    width: 40,
-    height: 40,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
     borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
@@ -121,14 +115,10 @@ const styles = StyleSheet.create({
   sendButtonDisabled: {
     backgroundColor: 'transparent',
   },
-  sendIcon: {
-    fontSize: 16,
-  },
-  sendIconActive: {
+  sendButtonText: {
+    fontSize: 14,
+    fontWeight: '600',
     color: '#ffffff',
-  },
-  sendIconDisabled: {
-    color: '#475569',
   },
 });
 
