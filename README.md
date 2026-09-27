@@ -331,6 +331,6 @@ Using REST API for initial message history hydration and WebSockets (Socket.io) 
 
 ## Live Backend URL
 
-- **Production Health Check Endpoint**: `https://your-backend-service.onrender.com/api/health`
-- **Production API Base**: `https://your-backend-service.onrender.com/api`
-- **Production Socket Server**: `https://your-backend-service.onrender.com`
+- **Production Health Check Endpoint**: `https://realtime-chat-app-etdh.onrender.com/api/health`
+- **Production API Base**: `https://realtime-chat-app-etdh.onrender.com/api`
+- **Production Socket Server**: `https://realtime-chat-app-etdh.onrender.com`
