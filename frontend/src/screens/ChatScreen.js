@@ -20,6 +20,25 @@ import {
   disconnectSocket,
 } from '../services/socketService';
 
+// Inject CSS in web environment to hide any floating dev menu / gear overlays
+if (Platform.OS === 'web' && typeof document !== 'undefined') {
+  try {
+    const style = document.createElement('style');
+    style.innerHTML = `
+      [class*="dev-menu"], [id*="dev-menu"], [class*="DevTools"], [id*="react-devtools"],
+      button[title*="Settings"], div[title*="Settings"], .expo-dev-menu-trigger {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+      }
+    `;
+    document.head.appendChild(style);
+  } catch (e) {
+    // Ignore web DOM injection errors on non-browser environments
+  }
+}
+
 const ChatScreen = ({ username, onLeave }) => {
   const [messages, setMessages] = useState([]);
   const [onlineUsers, setOnlineUsers] = useState([]);
@@ -159,8 +178,8 @@ const ChatScreen = ({ username, onLeave }) => {
   return (
     <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
       <KeyboardAvoidingView
-        style={styles.container}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.keyboardAvoidingView}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
         <Header
           username={username}
@@ -175,42 +194,45 @@ const ChatScreen = ({ username, onLeave }) => {
           onDismiss={() => setAlertMessage('')}
         />
 
-        {loading ? (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="small" color="#6366f1" />
-            <Text style={styles.loadingText}>Loading messages...</Text>
-          </View>
-        ) : (
-          <FlatList
-            ref={flatListRef}
-            data={messages}
-            keyExtractor={(item, index) => item._id || index.toString()}
-            renderItem={({ item, index }) => {
-              const isConsecutive =
-                index > 0 && messages[index - 1]?.username === item.username;
-              return (
-                <MessageBubble
-                  item={item}
-                  currentUsername={username}
-                  isConsecutive={isConsecutive}
-                />
-              );
-            }}
-            contentContainerStyle={styles.listContent}
-            keyboardShouldPersistTaps="handled"
-            onContentSizeChange={() => scrollToBottom(true)}
-            onLayout={() => scrollToBottom(false)}
-            ListEmptyComponent={
-              <View style={styles.emptyContainer}>
-                <Text style={styles.emptyIcon}>💬</Text>
-                <Text style={styles.emptyTitle}>No messages yet</Text>
-                <Text style={styles.emptySubtitle}>Start the conversation!</Text>
-              </View>
-            }
-          />
-        )}
+        <View style={styles.mainChatContent}>
+          {loading ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="small" color="#6366f1" />
+              <Text style={styles.loadingText}>Loading messages...</Text>
+            </View>
+          ) : (
+            <FlatList
+              ref={flatListRef}
+              data={messages}
+              keyExtractor={(item, index) => item._id || index.toString()}
+              renderItem={({ item, index }) => {
+                const isConsecutive =
+                  index > 0 && messages[index - 1]?.username === item.username;
+                return (
+                  <MessageBubble
+                    item={item}
+                    currentUsername={username}
+                    isConsecutive={isConsecutive}
+                  />
+                );
+              }}
+              contentContainerStyle={styles.listContent}
+              keyboardShouldPersistTaps="handled"
+              onContentSizeChange={() => scrollToBottom(true)}
+              onLayout={() => scrollToBottom(false)}
+              ListEmptyComponent={
+                <View style={styles.emptyContainer}>
+                  <Text style={styles.emptyIcon}>💬</Text>
+                  <Text style={styles.emptyTitle}>No messages yet</Text>
+                  <Text style={styles.emptySubtitle}>Start the conversation!</Text>
+                </View>
+              }
+            />
+          )}
 
-        <TypingIndicator typingUsers={typingUsers} />
+          <TypingIndicator typingUsers={typingUsers} />
+        </View>
+
         <MessageInput username={username} />
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -222,7 +244,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#090d16',
   },
-  container: {
+  keyboardAvoidingView: {
+    flex: 1,
+    backgroundColor: '#090d16',
+  },
+  mainChatContent: {
     flex: 1,
     backgroundColor: '#090d16',
   },
@@ -239,6 +265,7 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingVertical: 12,
+    paddingBottom: 8,
     flexGrow: 1,
   },
   emptyContainer: {
