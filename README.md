@@ -1,40 +1,40 @@
 # Real-Time Chat Application
 
-A modern, full-stack real-time chat application built with **React Native (Expo)** on the frontend and **Node.js, Express, Socket.io, and MongoDB** on the backend.
+A full-stack real-time chat application built as a 24-hour hiring assignment. The app lets users join a live global chat room with real-time messaging, typing indicators, and online presence — running on React Native (Expo) for the frontend and Node.js + Socket.io + MongoDB on the backend.
 
 ---
 
 ## Overview
 
-This application provides a seamless real-time messaging experience across Mobile (iOS/Android) and Web platforms. On launch, users enter a username to join a live global chat room. Message history is retrieved via a REST API from MongoDB, and subsequent messages, user presence, and typing indicators are handled in real-time over WebSockets powered by Socket.io.
+Users enter a username to join a shared global chat room. Message history is fetched via a REST API on join, and subsequent messages are delivered instantly via Socket.io WebSockets. The backend validates and persists every message to MongoDB before broadcasting to all connected clients.
 
 ---
 
 ## Features
 
-- **Real-Time Messaging**: Instant message delivery and broadcast across all connected clients via Socket.io.
-- **Message History Persistence**: Messages are validated and persisted in MongoDB before being broadcasted.
-- **Initial State Hydration**: Message history is retrieved via a REST API when joining the chat.
-- **Online User Presence**: Live active user counter and online user badge list.
-- **Typing Indicators**: Real-time typing status notification with auto-stop debouncing.
-- **Cross-Platform Interface**: Responsive, modern dark-themed UI built for iOS, Android, and Web using React Native.
-- **Connection Health & Banner Alerts**: Dynamic notification banner for disconnections, reconnection attempts, and server errors.
+- ⚡ **Real-time messaging** — instant delivery via Socket.io
+- 📜 **Message history** — persisted in MongoDB, loaded via REST on join
+- 👥 **Online presence** — live count of connected users
+- ✍️ **Typing indicators** — shows who is typing with auto-stop debounce
+- 🌐 **Cross-platform** — iOS, Android, and Web via React Native / Expo
+- 🔔 **Connection banners** — live disconnect/reconnect status alerts
+- ☁️ **Production-ready** — deployed backend on Render, builds via EAS
 
 ---
 
 ## Tech Stack
 
-### Frontend
-- **Framework**: React Native with Expo (SDK 57)
-- **Web Support**: React Native Web & React DOM
-- **Safe Area Management**: `react-native-safe-area-context`
-- **Networking**: Axios (REST API) & `socket.io-client` (WebSockets)
-
-### Backend
-- **Runtime**: Node.js & Express.js
-- **Real-Time Protocol**: Socket.io v4
-- **Database**: MongoDB with Mongoose ORM
-- **Utilities**: CORS, dotenv, nodemon
+| Layer | Technology |
+| :--- | :--- |
+| Mobile/Web frontend | React Native + Expo SDK 57 |
+| Web renderer | React Native Web |
+| REST client | Axios |
+| WebSocket client | socket.io-client v4 |
+| Backend runtime | Node.js + Express.js |
+| Real-time server | Socket.io v4 |
+| Database | MongoDB + Mongoose |
+| Cloud hosting | Render (backend) |
+| Mobile builds | EAS Build (Expo) |
 
 ---
 
@@ -54,10 +54,11 @@ React Native
                          Real-time broadcast
 ```
 
-### Flow Explanation
-1. **Initial Hydration (REST API)**: When a client opens `ChatScreen`, it issues an HTTP `GET /api/messages` request. Express queries MongoDB and returns the message history ordered chronologically.
-2. **Real-Time Layer (Socket.io)**: Upon entering the chat, the client establishes a persistent WebSocket connection. When a user sends a message, it is emitted to the server via the `send_message` event.
-3. **Database First Pattern**: The backend validates input and saves the message to MongoDB first. Only after successful database insertion does the server broadcast `new_message` to all connected sockets.
+### Flow
+
+1. **Initial hydration**: On joining the chat screen, the client calls `GET /api/messages` (Axios → Express → MongoDB) to load chat history.
+2. **Real-time messaging**: A persistent WebSocket connection is established. When a user sends a message, it is emitted via the `send_message` Socket.io event.
+3. **Persist-then-broadcast**: The server saves the message to MongoDB first. Only after successful persistence does it broadcast `new_message` to all connected clients.
 
 ---
 
@@ -69,47 +70,47 @@ realtime-chat-app/
 ├── backend/
 │   ├── src/
 │   │   ├── config/
-│   │   │   └── db.js               # MongoDB connection setup
+│   │   │   └── db.js                  # MongoDB connection
 │   │   ├── controllers/
-│   │   │   ├── healthController.js # Server health check logic
-│   │   │   └── messageController.js# REST endpoints for fetching & creating messages
+│   │   │   ├── healthController.js    # Health check logic
+│   │   │   └── messageController.js   # REST message handlers
 │   │   ├── middleware/
-│   │   │   └── errorHandler.js    # Global Express error handler
+│   │   │   └── errorHandler.js        # Global error handler
 │   │   ├── models/
-│   │   │   └── Message.js         # Mongoose schema for chat messages
+│   │   │   └── Message.js             # Mongoose schema
 │   │   ├── routes/
-│   │   │   ├── healthRoutes.js    # Health route definition
-│   │   │   ├── index.js           # Centralized API router
-│   │   │   └── messageRoutes.js   # Message REST endpoints
+│   │   │   ├── index.js               # Central router
+│   │   │   ├── healthRoutes.js
+│   │   │   └── messageRoutes.js
 │   │   ├── services/
-│   │   │   └── messageService.js  # Database access layer for messages
+│   │   │   └── messageService.js      # DB access layer
 │   │   └── sockets/
-│   │       └── socketHandler.js   # Socket.io event listeners & presence logic
-│   ├── app.js                     # Express app setup and middleware configuration
-│   ├── server.js                  # Server entry point (HTTP & Socket.io server listener)
-│   ├── .env                       # Environment variables
-│   ├── .env.example               # Template environment configuration
+│   │       └── socketHandler.js       # Socket.io event handlers
+│   ├── app.js                         # Express app + middleware
+│   ├── server.js                      # HTTP + Socket.io server entry
+│   ├── .env.example                   # Env variable template
 │   └── package.json
 │
 ├── frontend/
 │   ├── src/
 │   │   ├── components/
-│   │   │   ├── BannerAlert.js     # Connection status and error banner
-│   │   │   ├── Header.js          # Header with online user count and status dot
-│   │   │   ├── MessageBubble.js   # Render individual message bubbles with timestamps
-│   │   │   ├── MessageInput.js    # Input box with send button and typing emitter
-│   │   │   └── TypingIndicator.js # Animated typing indicator bar
+│   │   │   ├── BannerAlert.js         # Connection error/warning banner
+│   │   │   ├── Header.js              # Online count + connection dot
+│   │   │   ├── MessageBubble.js       # Chat bubble with timestamp
+│   │   │   ├── MessageInput.js        # Text input + send + typing emit
+│   │   │   └── TypingIndicator.js     # "X is typing..." bar
 │   │   ├── constants/
-│   │   │   └── config.js          # Host IP, API, and Socket URLs configuration
+│   │   │   └── config.js              # API + Socket URLs
 │   │   ├── screens/
-│   │   │   ├── ChatScreen.js      # Main chat view containing messages list & socket setup
-│   │   │   └── UsernameScreen.js  # Entry screen to input username
+│   │   │   ├── ChatScreen.js          # Main chat view + socket lifecycle
+│   │   │   └── UsernameScreen.js      # Username entry screen
 │   │   └── services/
-│   │       ├── apiService.js      # Axios HTTP client calls
-│   │       └── socketService.js   # Socket.io client wrapper functions
-│   ├── App.js                     # Main application entry point
-│   ├── app.json                   # Expo app configuration manifest
-│   ├── index.js                   # Expo root component registration
+│   │       ├── apiService.js          # Axios REST calls
+│   │       └── socketService.js       # Socket.io client wrapper
+│   ├── App.js
+│   ├── app.json                       # Expo app config + EAS project ID
+│   ├── eas.json                       # EAS Build profiles
+│   ├── index.js
 │   └── package.json
 │
 └── README.md
@@ -117,220 +118,168 @@ realtime-chat-app/
 
 ---
 
-## Project Setup
+## Backend API
 
-### Steps to Run the Backend
-1. Open terminal and navigate to `backend`:
-   ```bash
-   cd backend
-   ```
-2. Install node dependencies:
-   ```bash
-   npm install
-   ```
-3. Set up environment variables by copying `.env.example`:
-   ```bash
-   cp .env.example .env
-   ```
-4. Start the backend server:
-   ```bash
-   npm run dev
-   ```
+### Base URL: `https://realtime-chat-app-etdh.onrender.com/api`
 
-### Steps to Run the Frontend
-1. Open terminal and navigate to `frontend`:
-   ```bash
-   cd frontend
-   ```
-2. Install node dependencies:
-   ```bash
-   npm install
-   ```
-3. Update host settings in `frontend/src/constants/config.js` if connecting from physical devices (`HOST_IP = "<YOUR_LOCAL_IP>"`).
-4. Launch Expo development server:
-   ```bash
-   npm start
-   ```
-5. Press `w` to open in browser, or scan the QR code using **Expo Go** on a mobile device.
-
----
-
-## Backend Setup
-
-### Prerequisites
-- Node.js (v16+ recommended)
-- MongoDB installed locally OR a MongoDB Atlas connection string
-
-### Steps to Run the Backend
-
-1. Navigate to the `backend` directory:
-   ```bash
-   cd backend
-   ```
-
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Create a `.env` file based on `.env.example`:
-   ```bash
-   cp .env.example .env
-   ```
-
-4. Start the backend development server:
-   ```bash
-   npm run dev
-   ```
-   The backend server will run on `http://localhost:5000` (or `http://<YOUR_LOCAL_IP>:5000`).
-
----
-
-## Frontend Setup
-
-### Prerequisites
-- Node.js (v16+ recommended)
-- Expo Go app on iOS/Android device (optional for testing on physical phone)
-
-### Steps to Run the Frontend
-
-1. Navigate to the `frontend` directory:
-   ```bash
-   cd frontend
-   ```
-
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Configure Network Settings in `frontend/src/constants/config.js`:
-   - **Web Browser**: Set `HOST_IP = "localhost"`
-   - **Android Emulator**: Set `HOST_IP = "10.0.2.2"`
-   - **Physical Device**: Set `HOST_IP` to your computer's local Wi-Fi IP address (e.g. `HOST_IP = "192.168.1.3"`).
-
-4. Start the Expo development server:
-   ```bash
-   npm start
-   ```
-
-   - Press `w` to launch in Web Browser.
-   - Scan the displayed QR code using the **Expo Go** app on your physical mobile device.
-   - To connect from a mobile device on a different network, run:
-     ```bash
-     npx expo start --tunnel
-     ```
-
----
-
-## Environment Variables Required
-
-### Backend Configuration (`backend/.env`)
-
-| Variable | Description | Default Value | Required |
-| :--- | :--- | :--- | :--- |
-| `PORT` | Port on which the Express & Socket.io server listens | `5000` | Yes |
-| `MONGODB_URI` | Connection URI for local or cloud MongoDB instance | `mongodb://localhost:27017/realtime_chat_db` | Yes |
-| `CORS_ORIGIN` | Allowed cross-origin domain(s) for HTTP and WebSockets | `*` | Yes |
-
----
-
-## API Endpoints
-
-### Base URL: `http://localhost:5000/api`
-
-| Method | Endpoint | Description | Request Body | Response |
+| Method | Endpoint | Description | Body | Response |
 | :--- | :--- | :--- | :--- | :--- |
-| `GET` | `/health` | Server health check & DB status | None | `{ status: "OK", timestamp, database: "connected" }` |
-| `GET` | `/messages` | Fetch stored message history sorted chronologically | None | `[ { _id, username, text, createdAt }, ... ]` |
-| `POST` | `/messages` | Save a new message via REST API | `{ username: string, text: string }` | `{ _id, username, text, createdAt }` |
+| `GET` | `/health` | Health check + DB status | — | `{ status, timestamp, database }` |
+| `GET` | `/messages` | Load all messages (chronological) | — | `[{ _id, username, text, createdAt }]` |
+| `POST` | `/messages` | Save a message via REST | `{ username, text }` | `{ _id, username, text, createdAt }` |
 
 ---
 
 ## Socket.io Events
 
-### Client ──► Server Events
+### Client → Server
 
-| Event Name | Payload Format | Description |
+| Event | Payload | Description |
 | :--- | :--- | :--- |
-| `join_chat` | `{ username: string }` | Registers socket ID with username and updates online users list. |
-| `send_message` | `{ username: string, text: string }` | Emits a new chat message to be persisted and broadcasted. |
-| `typing` | `{ username: string }` | Triggers active typing status for the user. |
-| `stop_typing` | `{ username: string }` | Clears active typing status for the user. |
+| `join_chat` | `{ username }` | Register user and broadcast updated online list |
+| `send_message` | `{ username, text }` | Save message and broadcast to all clients |
+| `typing` | `{ username }` | Notify others that user is typing |
+| `stop_typing` | `{ username }` | Notify others that user stopped typing |
 
-### Server ──► Client Events
+### Server → Client
 
-| Event Name | Payload Format | Description |
+| Event | Payload | Description |
 | :--- | :--- | :--- |
-| `connected` | `{ socketId: string, message: string }` | Emitted to newly connected client acknowledging connection. |
-| `users_online` | `Array<string>` | Broadcasts updated list of online unique usernames. |
-| `new_message` | `{ _id, username, text, createdAt }` | Broadcasts newly saved message to all connected clients. |
-| `user_typing` | `{ username: string }` | Broadcasts to other clients that a specific user is typing. |
-| `user_stop_typing` | `{ username: string }` | Broadcasts to other clients that user stopped typing. |
-| `message_error` | `{ message: string }` | Sent back to sender socket if message saving or validation fails. |
+| `connected` | `{ socketId, message }` | Sent to newly connected client |
+| `users_online` | `string[]` | Updated online user list |
+| `new_message` | `{ _id, username, text, createdAt }` | New persisted message for all clients |
+| `user_typing` | `{ username }` | Someone is typing |
+| `user_stop_typing` | `{ username }` | Someone stopped typing |
+| `message_error` | `{ message }` | Error sent only to the failing sender |
+
+---
+
+## Environment Variables
+
+### Backend (`backend/.env`)
+
+| Variable | Description | Example |
+| :--- | :--- | :--- |
+| `PORT` | Server port | `5000` |
+| `MONGODB_URI` | MongoDB connection string | `mongodb+srv://...` |
+| `CORS_ORIGIN` | CORS allowed origins | `*` |
+
+> Copy `backend/.env.example` to `backend/.env` and fill in your values.
+
+---
+
+## Local Setup
+
+### Prerequisites
+- Node.js v16+
+- MongoDB running locally **or** a MongoDB Atlas URI
+- Expo Go installed on your mobile device (optional)
+
+### Backend
+
+```bash
+cd backend
+npm install
+cp .env.example .env   # fill in MONGODB_URI
+npm run dev
+```
+
+Server runs at `http://localhost:5000`
+
+### Frontend
+
+```bash
+cd frontend
+npm install
+npx expo start
+```
+
+> Before starting, update `frontend/src/constants/config.js`:
+> - **Browser**: keep `API_BASE_URL = "http://localhost:5000"` or use the Render URL
+> - **Physical device**: set your local machine IP
+> - **Production**: use `https://realtime-chat-app-etdh.onrender.com`
+
+Press `w` to open in browser, or scan the QR code with Expo Go on your phone.
+For cross-network devices:
+
+```bash
+npx expo start --tunnel
+```
+
+---
+
+## Production
+
+| Service | Provider | URL |
+| :--- | :--- | :--- |
+| Backend API + Socket.io | Render | `https://realtime-chat-app-etdh.onrender.com` |
+| Database | MongoDB Atlas | Managed cloud cluster |
+| Mobile builds | Expo EAS | [EAS Dashboard](https://expo.dev/accounts/hardikkapil/projects/realtime-chat) |
+
+### Live URLs
+
+- **Health check**: `https://realtime-chat-app-etdh.onrender.com/api/health`
+- **Messages API**: `https://realtime-chat-app-etdh.onrender.com/api/messages`
+- **Socket server**: `https://realtime-chat-app-etdh.onrender.com`
+
+> **Note**: The free Render tier spins down after ~15 minutes of inactivity. The first request after a cold start may take 30–60 seconds.
 
 ---
 
 ## Design Decisions
 
-### Single Global Conversation
-The application uses a single global conversation because the assignment requires real-time messaging but does not require multiple rooms or private conversations. Socket.io broadcasts new persisted messages to all connected clients. The architecture can be extended to room-based messaging by introducing a `roomId` and using Socket.io rooms.
+### Single Global Chat Room
+The application uses a single global conversation because the assignment requires a real-time chat application but does not require room-based messaging. Socket.io broadcasts new persisted messages to all connected clients. The architecture can be extended to room-based messaging by introducing a `roomId` field on messages and using Socket.io's `socket.join(roomId)` / `io.to(roomId).emit()` pattern.
 
-### Persistence Before Broadcast
-When a `send_message` socket event arrives, the server persists the message to MongoDB **first**. Only upon successful database insertion is the `new_message` payload broadcasted to all connected clients. If database insertion fails, an isolated `message_error` event is returned only to the sender, ensuring data integrity across clients.
+### Persist Before Broadcast
+Messages are saved to MongoDB before being broadcast to any client. If the database write fails, only the sender receives a `message_error` event — no failed message is ever shown to other users. This ensures database and UI consistency.
 
-### Dual-Protocol Architecture
-Using REST API for initial message history hydration and WebSockets (Socket.io) for live messaging reduces initial WebSocket handshake payload sizes and avoids re-sending history over socket streams.
+### REST + WebSocket Dual-Protocol Design
+Using REST to load message history on join and WebSockets for live messaging is a deliberate separation of concerns. REST is ideal for paginated, cacheable history retrieval. WebSockets are ideal for low-latency live events. Mixing them (e.g., sending full history over a socket) would unnecessarily increase WebSocket payload sizes.
+
+### In-Memory Online User Tracking
+Online users are tracked in a `Map<socketId, username>` in memory on the server. This is sufficient for a single-server deployment. For a horizontally-scaled backend, this would need to be replaced with a shared store such as Redis.
 
 ---
 
-## Assumptions Made
+## Assumptions
 
-1. **Open Room Access**: Users join a global public room upon providing a display username.
-2. **Simplified User Authentication**: User identification is based on display usernames. Production deployments can integrate JWT authentication tokens into Socket.io connection handshakes and HTTP authorization headers.
-3. **Database Availability**: A reachable MongoDB instance (local or Atlas) is running prior to starting the backend.
+1. **No authentication required**: Users identify themselves with a self-assigned username. No passwords or sessions are implemented.
+2. **Single room**: All connected users share one global chat. No private messages or separate rooms.
+3. **MongoDB available**: A running MongoDB instance (local or Atlas) is expected before the backend starts.
+4. **Single server instance**: The in-memory online user map works for a single Node.js process.
 
 ---
 
 ## Testing
 
-### Manual Functional Testing
-1. **Multi-Tab Web Testing**:
-   - Open `http://localhost:8081` (or local dev port) in two separate browser windows/incognito tabs with different usernames.
-   - Send messages from Window A; verify instant receipt in Window B.
-   - Start typing in Window A; verify typing indicator displays in Window B.
-2. **Mobile + Web Integration**:
-   - Launch the app on an Android/iOS physical device via Expo Go.
-   - Connect simultaneously on Web. Verify bi-directional communication between mobile and web clients.
-3. **Disconnection & Reconnection Test**:
-   - Stop the backend process (`Ctrl+C`). Observe warning banner in frontend.
-   - Restart backend (`npm run dev`). Verify socket automatically reconnects without page refresh.
+### Manual Tests
+
+1. **Multi-tab (Web)**: Open the app in two browser tabs with different usernames. Send a message from Tab A — verify it appears instantly in Tab B.
+2. **Typing indicators**: Start typing in Tab A — verify the typing indicator appears in Tab B. Stop typing — verify it disappears.
+3. **Mobile + Web**: Run Expo Go on a physical device alongside the web browser. Verify messages send and receive across both.
+4. **Disconnect/reconnect**: Stop the backend (`Ctrl+C`). The frontend shows a disconnect warning banner. Restart — socket auto-reconnects.
+5. **Message persistence**: Reload the page — historical messages load from MongoDB via REST.
 
 ---
 
 ## Screenshots
 
-*(Add application screenshots showcasing Username Screen, Live Chat view, and Typing Indicators)*
+*(Screenshots of the Username Screen, Chat Screen, and Typing Indicator)*
 
 | Username Screen | Chat Screen |
 | :---: | :---: |
-| ![Username Screen](https://via.placeholder.com/300x600?text=Username+Screen) | ![Chat Screen](https://via.placeholder.com/300x600?text=Chat+Screen) |
+| *(add screenshot)* | *(add screenshot)* |
 
 ---
 
 ## APK
 
-- You can build the production Android APK using EAS CLI:
-  ```bash
-  cd frontend
-  npx eas-cli build -p android --profile preview
-  ```
-- **Direct APK Download Link**: *(Insert hosted APK link here when built)*
+Built with EAS Build (Expo Application Services).
 
----
+```bash
+cd frontend
+npx eas-cli build --platform android --profile preview
+```
 
-## Live Backend URL
-
-- **Production Health Check Endpoint**: `https://realtime-chat-app-etdh.onrender.com/api/health`
-- **Production API Base**: `https://realtime-chat-app-etdh.onrender.com/api`
-- **Production Socket Server**: `https://realtime-chat-app-etdh.onrender.com`
+**Download APK**: [EAS Build Page](https://expo.dev/accounts/hardikkapil/projects/realtime-chat/builds/7c469c00-1252-46c1-aeea-53c643a60891)
