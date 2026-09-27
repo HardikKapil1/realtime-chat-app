@@ -117,13 +117,51 @@ realtime-chat-app/
 
 ---
 
+## Project Setup
+
+### Steps to Run the Backend
+1. Open terminal and navigate to `backend`:
+   ```bash
+   cd backend
+   ```
+2. Install node dependencies:
+   ```bash
+   npm install
+   ```
+3. Set up environment variables by copying `.env.example`:
+   ```bash
+   cp .env.example .env
+   ```
+4. Start the backend server:
+   ```bash
+   npm run dev
+   ```
+
+### Steps to Run the Frontend
+1. Open terminal and navigate to `frontend`:
+   ```bash
+   cd frontend
+   ```
+2. Install node dependencies:
+   ```bash
+   npm install
+   ```
+3. Update host settings in `frontend/src/constants/config.js` if connecting from physical devices (`HOST_IP = "<YOUR_LOCAL_IP>"`).
+4. Launch Expo development server:
+   ```bash
+   npm start
+   ```
+5. Press `w` to open in browser, or scan the QR code using **Expo Go** on a mobile device.
+
+---
+
 ## Backend Setup
 
 ### Prerequisites
 - Node.js (v16+ recommended)
 - MongoDB installed locally OR a MongoDB Atlas connection string
 
-### Installation & Run Steps
+### Steps to Run the Backend
 
 1. Navigate to the `backend` directory:
    ```bash
@@ -154,7 +192,7 @@ realtime-chat-app/
 - Node.js (v16+ recommended)
 - Expo Go app on iOS/Android device (optional for testing on physical phone)
 
-### Installation & Run Steps
+### Steps to Run the Frontend
 
 1. Navigate to the `frontend` directory:
    ```bash
@@ -185,15 +223,15 @@ realtime-chat-app/
 
 ---
 
-## Environment Variables
+## Environment Variables Required
 
 ### Backend Configuration (`backend/.env`)
 
-| Variable | Description | Default Value |
-| :--- | :--- | :--- |
-| `PORT` | Port on which the Express & Socket.io server listens | `5000` |
-| `MONGODB_URI` | Connection URI for local or cloud MongoDB instance | `mongodb://localhost:27017/realtime_chat_db` |
-| `CORS_ORIGIN` | Allowed cross-origin domain(s) for HTTP and WebSockets | `*` |
+| Variable | Description | Default Value | Required |
+| :--- | :--- | :--- | :--- |
+| `PORT` | Port on which the Express & Socket.io server listens | `5000` | Yes |
+| `MONGODB_URI` | Connection URI for local or cloud MongoDB instance | `mongodb://localhost:27017/realtime_chat_db` | Yes |
+| `CORS_ORIGIN` | Allowed cross-origin domain(s) for HTTP and WebSockets | `*` | Yes |
 
 ---
 
@@ -246,7 +284,7 @@ Using REST API for initial message history hydration and WebSockets (Socket.io) 
 
 ---
 
-## Assumptions
+## Assumptions Made
 
 1. **Open Room Access**: Users join a global public room upon providing a display username.
 2. **Simplified User Authentication**: User identification is based on display usernames. Production deployments can integrate JWT authentication tokens into Socket.io connection handshakes and HTTP authorization headers.
