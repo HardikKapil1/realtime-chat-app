@@ -128,6 +128,8 @@ realtime-chat-app/
 | `GET` | `/messages` | Load all messages (chronological) | — | `[{ _id, username, text, createdAt }]` |
 | `POST` | `/messages` | Save a message via REST | `{ username, text }` | `{ _id, username, text, createdAt }` |
 
+> **Note**: The mobile client uses Socket.io `send_message` for real-time message sending. The `POST /messages` endpoint is provided as the required REST API for message creation and is available for external integrations or testing.
+
 ---
 
 ## Socket.io Events
@@ -263,13 +265,11 @@ Online users are tracked in a `Map<socketId, username>` in memory on the server.
 
 ---
 
-## Screenshots
+## Demo Video
 
-*(Screenshots of the Username Screen, Chat Screen, and Typing Indicator)*
+[▶ Watch Demo Video](https://drive.google.com/file/d/1FmGnYb4SbpTLsGqULYSpS3weOKABiHvd/view?usp=sharing)
 
-| Username Screen | Chat Screen |
-| :---: | :---: |
-| *(add screenshot)* | *(add screenshot)* |
+> Make sure Google Drive sharing is set to **Anyone with the link → Viewer**.
 
 ---
 
