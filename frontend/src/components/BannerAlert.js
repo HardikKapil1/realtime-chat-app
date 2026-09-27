@@ -26,7 +26,7 @@ const BannerAlert = ({ message, type = 'error', onDismiss }) => {
 const styles = StyleSheet.create({
   banner: {
     paddingHorizontal: 16,
-    paddingVertical: 9,
+    paddingVertical: 8,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -48,11 +48,11 @@ const styles = StyleSheet.create({
   },
   dismissButton: {
     marginLeft: 10,
-    padding: 4,
+    padding: 2,
   },
   dismissText: {
     color: '#94a3b8',
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: '600',
   },
 });

@@ -26,12 +26,13 @@ const TypingIndicator = ({ typingUsers = [] }) => {
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
-    paddingVertical: 5,
+    paddingVertical: 4,
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: '#090d16',
   },
   dot: {
-    fontSize: 10,
+    fontSize: 9,
     color: '#38bdf8',
     marginRight: 6,
   },

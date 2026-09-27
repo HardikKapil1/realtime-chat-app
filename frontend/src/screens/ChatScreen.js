@@ -160,7 +160,7 @@ const ChatScreen = ({ username, onLeave }) => {
     <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
       <KeyboardAvoidingView
         style={styles.container}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
         <Header
           username={username}
@@ -185,14 +185,24 @@ const ChatScreen = ({ username, onLeave }) => {
             ref={flatListRef}
             data={messages}
             keyExtractor={(item, index) => item._id || index.toString()}
-            renderItem={({ item }) => (
-              <MessageBubble item={item} currentUsername={username} />
-            )}
+            renderItem={({ item, index }) => {
+              const isConsecutive =
+                index > 0 && messages[index - 1]?.username === item.username;
+              return (
+                <MessageBubble
+                  item={item}
+                  currentUsername={username}
+                  isConsecutive={isConsecutive}
+                />
+              );
+            }}
             contentContainerStyle={styles.listContent}
+            keyboardShouldPersistTaps="handled"
             onContentSizeChange={() => scrollToBottom(true)}
             onLayout={() => scrollToBottom(false)}
             ListEmptyComponent={
               <View style={styles.emptyContainer}>
+                <Text style={styles.emptyIcon}>💬</Text>
                 <Text style={styles.emptyTitle}>No messages yet</Text>
                 <Text style={styles.emptySubtitle}>Start the conversation!</Text>
               </View>
@@ -228,22 +238,28 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
   listContent: {
-    paddingVertical: 10,
+    paddingVertical: 12,
+    flexGrow: 1,
   },
   emptyContainer: {
-    padding: 40,
+    flex: 1,
+    padding: 32,
     alignItems: 'center',
     justifyContent: 'center',
   },
+  emptyIcon: {
+    fontSize: 40,
+    marginBottom: 12,
+  },
   emptyTitle: {
     color: '#f8fafc',
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: '600',
     marginBottom: 4,
   },
   emptySubtitle: {
     color: '#94a3b8',
-    fontSize: 13,
+    fontSize: 14,
   },
 });
 

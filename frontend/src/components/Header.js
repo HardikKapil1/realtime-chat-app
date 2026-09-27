@@ -3,23 +3,27 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
 const Header = ({ username, onlineCount, isConnected, onLeave }) => {
   return (
-    <View style={styles.header}>
+    <View style={styles.headerContainer}>
       <View style={styles.topRow}>
-        <View style={styles.titleGroup}>
-          <Text style={styles.logoIcon}>💬</Text>
-          <View>
-            <Text style={styles.appName}>RealTime Chat</Text>
+        <View style={styles.titleWrapper}>
+          <Text style={styles.appIcon}>💬</Text>
+          <View style={styles.textColumn}>
+            <Text style={styles.appTitle}>RealTime Chat</Text>
             <Text style={styles.appSubtitle}>Live conversation</Text>
           </View>
         </View>
 
-        <View style={styles.rightGroup}>
-          <View style={styles.userTag}>
-            <Text style={styles.userTagText} numberOfLines={1}>
+        <View style={styles.rightWrapper}>
+          <View style={styles.userBadge}>
+            <Text style={styles.userBadgeText} numberOfLines={1}>
               @{username}
             </Text>
           </View>
-          <TouchableOpacity style={styles.exitButton} onPress={onLeave} activeOpacity={0.7}>
+          <TouchableOpacity
+            style={styles.exitButton}
+            onPress={onLeave}
+            activeOpacity={0.7}
+          >
             <Text style={styles.exitButtonText}>Exit</Text>
           </TouchableOpacity>
         </View>
@@ -41,11 +45,11 @@ const Header = ({ username, onlineCount, isConnected, onLeave }) => {
 };
 
 const styles = StyleSheet.create({
-  header: {
+  headerContainer: {
     backgroundColor: '#0f172a',
-    paddingHorizontal: 16,
-    paddingTop: 12,
-    paddingBottom: 10,
+    paddingHorizontal: 18,
+    paddingTop: 10,
+    paddingBottom: 12,
     borderBottomWidth: 1,
     borderBottomColor: '#1e293b',
   },
@@ -54,48 +58,51 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  titleGroup: {
+  titleWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  logoIcon: {
-    fontSize: 20,
+  appIcon: {
+    fontSize: 22,
     marginRight: 10,
   },
-  appName: {
-    fontSize: 17,
+  textColumn: {
+    justifyContent: 'center',
+  },
+  appTitle: {
+    fontSize: 22,
     fontWeight: '700',
-    color: '#f8fafc',
-    letterSpacing: -0.3,
+    color: '#ffffff',
+    letterSpacing: -0.4,
   },
   appSubtitle: {
-    fontSize: 11,
+    fontSize: 13,
     color: '#94a3b8',
     fontWeight: '400',
     marginTop: 1,
   },
-  rightGroup: {
+  rightWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  userTag: {
+  userBadge: {
     backgroundColor: '#1e293b',
     paddingHorizontal: 10,
     paddingVertical: 4,
-    borderRadius: 12,
+    borderRadius: 14,
     marginRight: 8,
     maxWidth: 110,
     borderWidth: 1,
     borderColor: '#334155',
   },
-  userTagText: {
+  userBadgeText: {
     fontSize: 12,
     fontWeight: '600',
     color: '#6366f1',
   },
   exitButton: {
     backgroundColor: '#1e293b',
-    paddingHorizontal: 10,
+    paddingHorizontal: 12,
     paddingVertical: 5,
     borderRadius: 8,
     borderWidth: 1,
@@ -103,22 +110,22 @@ const styles = StyleSheet.create({
   },
   exitButtonText: {
     fontSize: 12,
-    color: '#94a3b8',
+    color: '#cbd5e1',
     fontWeight: '500',
   },
   statusRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 6,
+    marginTop: 8,
   },
   statusDot: {
-    width: 7,
-    height: 7,
-    borderRadius: 3.5,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
     marginRight: 6,
   },
   statusText: {
-    fontSize: 11,
+    fontSize: 13,
     color: '#94a3b8',
     fontWeight: '500',
   },

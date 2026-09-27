@@ -17,7 +17,7 @@ const UsernameScreen = ({ onSetUsername }) => {
   const handleSubmit = () => {
     const trimmed = inputUsername.trim();
     if (!trimmed) {
-      setErrorMessage('Please enter your username to join');
+      setErrorMessage('Please enter your username');
       return;
     }
     setErrorMessage('');
@@ -31,15 +31,13 @@ const UsernameScreen = ({ onSetUsername }) => {
         style={styles.container}
       >
         <View style={styles.content}>
-          <View style={styles.headerSection}>
-            <View style={styles.iconCircle}>
-              <Text style={styles.iconText}>💬</Text>
-            </View>
-            <Text style={styles.title}>RealTime Chat</Text>
-            <Text style={styles.subtitle}>Connect instantly with your team</Text>
-          </View>
+          <Text style={styles.logoIcon}>💬</Text>
+          <Text style={styles.title}>RealTime Chat</Text>
+          <Text style={styles.subtitle}>
+            Connect instantly with your conversation
+          </Text>
 
-          <View style={styles.card}>
+          <View style={styles.inputCard}>
             <TextInput
               style={[styles.input, errorMessage ? styles.inputError : null]}
               placeholder="Enter your username"
@@ -82,35 +80,21 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 20,
+    paddingHorizontal: 24,
   },
   content: {
     width: '100%',
-    maxWidth: 380,
+    maxWidth: 360,
     alignItems: 'center',
   },
-  headerSection: {
-    alignItems: 'center',
-    marginBottom: 32,
-  },
-  iconCircle: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    backgroundColor: '#0f172a',
-    justifyContent: 'center',
-    alignItems: 'center',
+  logoIcon: {
+    fontSize: 44,
     marginBottom: 16,
-    borderWidth: 1,
-    borderColor: '#1e293b',
-  },
-  iconText: {
-    fontSize: 30,
   },
   title: {
     fontSize: 26,
     fontWeight: '700',
-    color: '#f8fafc',
+    color: '#ffffff',
     marginBottom: 6,
     letterSpacing: -0.5,
   },
@@ -118,26 +102,22 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#94a3b8',
     textAlign: 'center',
-    fontWeight: '400',
+    marginBottom: 32,
+    lineHeight: 20,
   },
-  card: {
+  inputCard: {
     width: '100%',
-    backgroundColor: '#0f172a',
-    borderRadius: 20,
-    padding: 20,
-    borderWidth: 1,
-    borderColor: '#1e293b',
   },
   input: {
     width: '100%',
-    backgroundColor: '#1e293b',
-    color: '#f8fafc',
+    backgroundColor: '#0f172a',
+    color: '#ffffff',
     fontSize: 15,
-    borderRadius: 12,
+    borderRadius: 14,
     paddingHorizontal: 16,
     paddingVertical: 14,
     borderWidth: 1,
-    borderColor: '#334155',
+    borderColor: '#1e293b',
     marginBottom: 4,
   },
   inputError: {
@@ -154,7 +134,7 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: '#6366f1',
     paddingVertical: 14,
-    borderRadius: 12,
+    borderRadius: 14,
     alignItems: 'center',
     marginTop: 12,
   },

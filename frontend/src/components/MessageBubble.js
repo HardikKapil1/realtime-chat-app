@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
 /**
- * Format timestamp to readable local time e.g. "10:35 AM"
+ * Format ISO timestamp to readable 12-hour local time e.g. "2:52 PM"
  */
 const formatTime = (isoString) => {
   if (!isoString) return '';
@@ -10,7 +10,7 @@ const formatTime = (isoString) => {
     const date = new Date(isoString);
     if (isNaN(date.getTime())) return '';
     return date.toLocaleTimeString([], {
-      hour: '2-digit',
+      hour: 'numeric',
       minute: '2-digit',
       hour12: true,
     });
@@ -19,7 +19,7 @@ const formatTime = (isoString) => {
   }
 };
 
-const MessageBubble = ({ item, currentUsername }) => {
+const MessageBubble = ({ item, currentUsername, isConsecutive = false }) => {
   const isCurrentUser =
     item.username?.trim().toLowerCase() === currentUsername?.trim().toLowerCase();
 
@@ -28,6 +28,7 @@ const MessageBubble = ({ item, currentUsername }) => {
       style={[
         styles.rowContainer,
         isCurrentUser ? styles.rowRight : styles.rowLeft,
+        isConsecutive ? styles.rowConsecutive : styles.rowNormal,
       ]}
     >
       <View
@@ -36,7 +37,7 @@ const MessageBubble = ({ item, currentUsername }) => {
           isCurrentUser ? styles.bubbleUser : styles.bubbleOther,
         ]}
       >
-        {!isCurrentUser && (
+        {!isCurrentUser && !isConsecutive && (
           <Text style={styles.usernameText}>{item.username}</Text>
         )}
         <Text
@@ -62,9 +63,14 @@ const MessageBubble = ({ item, currentUsername }) => {
 
 const styles = StyleSheet.create({
   rowContainer: {
-    marginVertical: 4,
     marginHorizontal: 16,
     flexDirection: 'row',
+  },
+  rowNormal: {
+    marginTop: 8,
+  },
+  rowConsecutive: {
+    marginTop: 3,
   },
   rowRight: {
     justifyContent: 'flex-end',
@@ -74,29 +80,29 @@ const styles = StyleSheet.create({
   },
   bubble: {
     maxWidth: '78%',
-    paddingHorizontal: 14,
-    paddingVertical: 9,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
     borderRadius: 16,
   },
   bubbleUser: {
     backgroundColor: '#6366f1',
-    borderBottomRightRadius: 3,
+    borderBottomRightRadius: 4,
   },
   bubbleOther: {
     backgroundColor: '#1e293b',
-    borderBottomLeftRadius: 3,
+    borderBottomLeftRadius: 4,
     borderWidth: 1,
     borderColor: '#334155',
   },
   usernameText: {
-    fontSize: 11,
+    fontSize: 12,
     fontWeight: '600',
     color: '#38bdf8',
-    marginBottom: 3,
+    marginBottom: 4,
   },
   messageText: {
-    fontSize: 14,
-    lineHeight: 20,
+    fontSize: 16,
+    lineHeight: 22,
   },
   textUser: {
     color: '#ffffff',
@@ -105,7 +111,7 @@ const styles = StyleSheet.create({
     color: '#f8fafc',
   },
   timestampText: {
-    fontSize: 10,
+    fontSize: 11,
     marginTop: 4,
     alignSelf: 'flex-end',
   },
