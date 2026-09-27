@@ -52,12 +52,12 @@ const initializeSocket = (io) => {
 
         // Input validation
         if (!trimmedUsername) {
-          socket.emit('error', { message: 'Username is required and cannot be empty.' });
+          socket.emit('message_error', { message: 'Username is required and cannot be empty.' });
           return;
         }
 
         if (!trimmedText) {
-          socket.emit('error', { message: 'Message text is required and cannot be empty.' });
+          socket.emit('message_error', { message: 'Message text is required and cannot be empty.' });
           return;
         }
 
@@ -79,7 +79,7 @@ const initializeSocket = (io) => {
       } catch (error) {
         console.error(`[Socket.io] Error saving/broadcasting message: ${error.message}`);
         // Do NOT broadcast on failure; send error to sender socket only
-        socket.emit('error', { message: error.message || 'Failed to save and send message.' });
+        socket.emit('message_error', { message: error.message || 'Failed to save and send message.' });
       }
     });
 

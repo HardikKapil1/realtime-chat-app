@@ -75,8 +75,8 @@ async function testSocketFlow() {
   await new Promise((r) => setTimeout(r, 300));
 
   // 8. Test Error Handling (Invalid Empty Message)
-  client1.on('error', (err) => {
-    console.log('[Client 1 Event] "error":', err);
+  client1.on('message_error', (err) => {
+    console.log('[Client 1 Event] "message_error":', err);
   });
 
   console.log('\n--- Client 1 sending invalid empty message ---');
